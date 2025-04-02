@@ -1,23 +1,15 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "api/callback.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/verify-payment",
-        "dest": "api/callback.js"
-      },
-      {
-        "src": "/webhook",
-        "dest": "api/callback.js"
-      },
-      {
-        "src": "/status",
-        "dest": "api/callback.js"
-      }
-    ]
-  }
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/callback.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/callback.js"
+    }
+  ]
+}
