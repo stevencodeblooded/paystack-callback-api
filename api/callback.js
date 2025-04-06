@@ -1,4 +1,3 @@
-// api/callback.js
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -13,7 +12,7 @@ app.get('/', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Paystack callback API is running' });
 });
 
-// Paystack verification endpoint
+// Successful payment page
 app.get('/verify-payment', async (req, res) => {
   const { reference, trxref } = req.query;
   
@@ -36,7 +35,7 @@ app.get('/verify-payment', async (req, res) => {
           <div class="container">
             <h1 class="error">Error: Missing Reference</h1>
             <p>No payment reference was provided.</p>
-            <p>Please return to SwiftMsg and try again.</p>
+            <p>Please return to SwifMsg and try again.</p>
           </div>
         </body>
       </html>
@@ -130,7 +129,7 @@ app.get('/verify-payment', async (req, res) => {
             <h3>Next Steps:</h3>
             <ol>
               <li>Copy the reference code above (or use the copy button)</li>
-              <li>Return to the SwiftMsg extension</li>
+              <li>Return to the SwifMsg extension</li>
               <li>Go to the "Verify Payment" section</li>
               <li>Paste the reference code and click "Verify"</li>
             </ol>
@@ -160,11 +159,67 @@ app.get('/verify-payment', async (req, res) => {
   `);
 });
 
+// Failed payment page
+app.get('/payment-failed', (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>Payment Failed</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 40px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            line-height: 1.6;
+            color: #333;
+          }
+          .error { 
+            color: #e74c3c; 
+            font-weight: bold;
+            margin-bottom: 20px;
+          }
+          .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+          }
+          .btn {
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 20px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1 class="error">Payment Failed</h1>
+          <p>We encountered an issue processing your payment.</p>
+          <p>Possible reasons:</p>
+          <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+            <li>Your card was declined</li>
+            <li>The verification process encountered an error</li>
+            <li>The payment was cancelled</li>
+          </ul>
+          <p>Please return to SwifMsg and try again with a different payment method.</p>
+          <a href="javascript:window.close()" class="btn">Close Window</a>
+        </div>
+      </body>
+    </html>
+  `);
+});
+
 // Paystack webhook endpoint
 app.post('/webhook', (req, res) => {
-  // In a production environment, you should validate the webhook signature
-  // For now, we just log the event and return success
   console.log('Webhook received:', req.body);
+  // Note: This is just a placeholder. The actual webhook handling happens in your main API
   res.status(200).send('Webhook received');
 });
 
